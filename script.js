@@ -1,39 +1,49 @@
 // Milestone 3: Dynamic Resume Updates
-const form = document.getElementById('resume-form');
-
-form.addEventListener('submit', (event) => {
+var form = document.getElementById('resume-form');
+form.addEventListener('submit', function (event) {
     event.preventDefault();
-
     // Get the form values
-    const name = document.getElementById('name').value;
-    const contact = document.getElementById('contact').value;
-    const education = document.getElementById('education').value;
-    const skills = document.getElementById('skills').value.split(',');
-
+    var name = document.getElementById('name').value;
+    var contact = document.getElementById('contact').value;
+    var education = document.getElementById('education').value;
+    var skills = document.getElementById('skills').value.split(',');
     // Update the resume display section with user-entered information
-    const displayName = document.getElementById('display-name');
-    displayName.textContent = name.trim() ? `Name: ${name.trim()}` : '';
-
+    var displayName = document.getElementById('display-name');
+    displayName.textContent = name.trim() ? "Name: ".concat(name.trim()) : '';
     // Update the contact info
-    const displayContact = document.getElementById('display-contact');
-    displayContact.innerHTML = contact 
-        ? `<a href="mailto:${contact.split('|')[0].trim()}">${contact.split('|')[0].trim()}</a> | <a href="tel:${contact.split('|')[1].trim()}">${contact.split('|')[1].trim()}</a>` 
-        : '<a href="mailto:anamanwer268@gmail.com">anamanwer268@gmail.com</a> | <a href="tel:+923012440210">03012440210</a>';
-
+    var displayContact = document.getElementById('display-contact');
+    if (contact) {
+        var _a = contact.split('|').map(function (item) { return item.trim(); }), email = _a[0], phone = _a[1];
+        displayContact.innerHTML = "\n            <a href=\"mailto:".concat(email, "\">").concat(email, "</a> | \n            <a href=\"tel:").concat(phone, "\">").concat(phone, "</a>\n        ");
+    }
     // Update the education section
-    const displayEducation = document.getElementById('display-education');
+    var displayEducation = document.getElementById('display-education');
     displayEducation.textContent = education || "Degree | University | Year";
-
     // Update the skills list
-    const skillsList = document.getElementById('display-skills');
+    var skillsList = document.getElementById('display-skills');
     skillsList.innerHTML = ''; // Clear existing skills
-    skills.forEach(skill => {
-        const li = document.createElement('li');
+    skills.forEach(function (skill) {
+        var li = document.createElement('li');
         li.textContent = skill.trim();
         skillsList.appendChild(li);
     });
 });
-
+// Milestone 4: Editable Resume Section
+var editableContent = document.getElementById('editable-content');
+editableContent.addEventListener('input', function () {
+    // Capture the edited content and reflect it in the resume dynamically
+    var editedContent = editableContent.innerHTML;
+    var resumeDisplay = document.getElementById('resume-display');
+    resumeDisplay.innerHTML = editedContent; // Replace the resume display with the edited content
+});
 // Milestone 5: Generate Shareable Link
-const shareableLink = document.getElementById('shareable-link');
-shareableLink.textContent = window.location.href;  // Use the current URL as the shareable link
+var shareableLink = document.getElementById('shareable-link');
+shareableLink.textContent = window.location.href; // Use the current URL as the shareable link
+// Optional: Make the link clickable and copyable
+shareableLink.addEventListener('click', function () {
+    navigator.clipboard.writeText(window.location.href).then(function () {
+        alert("Link copied to clipboard!");
+    }).catch(function (err) {
+        console.error('Failed to copy link: ', err);
+    });
+});
